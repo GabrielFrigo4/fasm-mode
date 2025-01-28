@@ -7,6 +7,16 @@ FASM-specific syntax. Requires Emacs 24.3 or higher.
 
 The keyword lists are up to date as of FASM 1.73.32.
 
+# Installing with Quelpa
+
+If you prefer to use a package manager, you can use [quelpa-use-package](https://github.com/quelpa/quelpa-use-package).
+
+```elisp
+;; Install FASM
+(use-package fasm-mode
+  :quelpa (fasm-mode :fetcher github :repo "GabrielFrigo4/fasm-mode"))
+```
+
 # Inspired by [nasm-mode][nasm-mode]
 
 This mode was completely inspired by the [nasm-mode][nasm-mode]

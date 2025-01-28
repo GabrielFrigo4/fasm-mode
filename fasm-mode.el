@@ -1,4 +1,4 @@
-;;; nasm-mode.el --- NASM x86 assembly major mode -*- lexical-binding: t; -*-
+;;; fasm-mode.el --- FASM x86 assembly major mode -*- lexical-binding: t; -*-
 
 ;; This is free and unencumbered software released into the public domain.
 
@@ -11,13 +11,13 @@
 
 ;; A major mode for editing FASM x86 assembly programs. It includes
 ;; syntax highlighting, automatic indentation, and imenu integration.
-;; Unlike Emacs' generic `asm-mode`, it understands NASM-specific
+;; Unlike Emacs' generic `asm-mode`, it understands FASM-specific
 ;; syntax.
 
-;; NASM Home: https://flatassembler.net/
+;; FASM Home: https://flatassembler.net/
 
 ;; Labels without colons are not recognized as labels by this mode,
-;; since, without a parser equal to that of NASM itself, it's
+;; since, without a parser equal to that of FASM itself, it's
 ;; otherwise ambiguous between macros and labels. This covers both
 ;; indentation and imenu support.
 
@@ -39,77 +39,77 @@
 
 (require 'imenu)
 
-(defgroup nasm-mode ()
-  "Options for `nasm-mode'."
+(defgroup fasm-mode ()
+  "Options for `fasm-mode'."
   :group 'languages)
 
-(defgroup nasm-mode-faces ()
-  "Faces used by `nasm-mode'."
-  :group 'nasm-mode)
+(defgroup fasm-mode-faces ()
+  "Faces used by `fasm-mode'."
+  :group 'fasm-mode)
 
-(defcustom nasm-basic-offset (default-value 'tab-width)
-  "Indentation level for `nasm-mode'."
+(defcustom fasm-basic-offset (default-value 'tab-width)
+  "Indentation level for `fasm-mode'."
   :type 'integer
-  :group 'nasm-mode)
+  :group 'fasm-mode)
 
-(defcustom nasm-after-mnemonic-whitespace :tab
-  "In `nasm-mode', determines the whitespace to use after mnemonics.
+(defcustom fasm-after-mnemonic-whitespace :tab
+  "In `fasm-mode', determines the whitespace to use after mnemonics.
 This can be :tab, :space, or nil (do nothing)."
   :type '(choice (const :tab) (const :space) (const nil))
-  :group 'nasm-mode)
+  :group 'fasm-mode)
 
-(defface nasm-registers
+(defface fasm-registers
   '((t :inherit (font-lock-variable-name-face)))
   "Face for registers."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-prefix
+(defface fasm-prefix
   '((t :inherit (font-lock-builtin-face)))
   "Face for prefix."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-types
+(defface fasm-types
   '((t :inherit (font-lock-type-face)))
   "Face for types."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-instructions
+(defface fasm-instructions
   '((t :inherit (font-lock-builtin-face)))
   "Face for instructions."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-directives
+(defface fasm-directives
   '((t :inherit (font-lock-keyword-face)))
   "Face for directives."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-preprocessor
+(defface fasm-preprocessor
   '((t :inherit (font-lock-preprocessor-face)))
   "Face for preprocessor directives."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-labels
+(defface fasm-labels
   '((t :inherit (font-lock-function-name-face)))
   "Face for nonlocal labels."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-local-labels
+(defface fasm-local-labels
   '((t :inherit (font-lock-function-name-face)))
   "Face for local labels."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-section-name
+(defface fasm-section-name
   '((t :inherit (font-lock-type-face)))
   "Face for section name face."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
-(defface nasm-constant
+(defface fasm-constant
   '((t :inherit (font-lock-constant-face)))
   "Face for constant."
-  :group 'nasm-mode-faces)
+  :group 'fasm-mode-faces)
 
 (eval-and-compile
-  (defconst nasm-registers
+  (defconst fasm-registers
     '("ah" "al" "ax" "bh" "bl" "bnd0" "bnd1" "bnd2" "bnd3" "bp" "bpl"
       "bx" "ch" "cl" "cr0" "cr1" "cr10" "cr11" "cr12" "cr13" "cr14"
       "cr15" "cr2" "cr3" "cr4" "cr5" "cr6" "cr7" "cr8" "cr9" "cs" "cx"
@@ -136,18 +136,18 @@ This can be :tab, :space, or nil (do nothing)."
       "zmm2" "zmm20" "zmm21" "zmm22" "zmm23" "zmm24" "zmm25" "zmm26"
       "zmm27" "zmm28" "zmm29" "zmm3" "zmm30" "zmm31" "zmm4" "zmm5"
       "zmm6" "zmm7" "zmm8" "zmm9")
-    "NASM registers (reg.c) for `nasm-mode'."))
+    "FASM registers (reg.c) for `fasm-mode'."))
 
 (eval-and-compile
-  (defconst nasm-directives
+  (defconst fasm-directives
     '("absolute" "bits" "common" "cpu" "debug" "default" "extern"
       "float" "global" "list" "section" "segment" "warning" "sectalign"
       "export" "group" "import" "library" "map" "module" "org" "osabi"
       "safeseh" "uppercase")
-    "NASM directives (directiv.c) for `nasm-mode'."))
+    "FASM directives (directiv.c) for `fasm-mode'."))
 
 (eval-and-compile
-  (defconst nasm-instructions
+  (defconst fasm-instructions
     '("aaa" "aad" "aam" "aas" "adc" "adcx" "add" "addpd" "addps"
       "addsd" "addss" "addsubpd" "addsubps" "adox" "aesdec"
       "aesdeclast" "aesenc" "aesenclast" "aesimc" "aeskeygenassist"
@@ -488,10 +488,10 @@ This can be :tab, :space, or nil (do nothing)."
       "xrstor" "xrstor64" "xrstors" "xrstors64" "xsave" "xsave64"
       "xsavec" "xsavec64" "xsaveopt" "xsaveopt64" "xsaves" "xsaves64"
       "xsetbv" "xsha1" "xsha256" "xstore" "xtest")
-    "NASM instructions (tokhash.c) for `nasm-mode'."))
+    "FASM instructions (tokhash.c) for `fasm-mode'."))
 
 (eval-and-compile
-  (defconst nasm-types
+  (defconst fasm-types
     '("1to16" "1to2" "1to4" "1to8" "__float128h__" "__float128l__"
       "__float16__" "__float32__" "__float64__" "__float80e__"
       "__float80m__" "__float8__" "__infinity__" "__nan__" "__qnan__"
@@ -500,16 +500,16 @@ This can be :tab, :space, or nil (do nothing)."
       "long" "near" "nosplit" "oword" "qword" "rel" "seg" "short"
       "strict" "to" "tword" "vex2" "vex3" "word" "wrt" "yword"
       "zword")
-    "NASM types (tokens.dat) for `nasm-mode'."))
+    "FASM types (tokens.dat) for `fasm-mode'."))
 
 (eval-and-compile
-  (defconst nasm-prefix
+  (defconst fasm-prefix
     '("a16" "a32" "a64" "asp" "lock" "o16" "o32" "o64" "osp" "rep" "repe"
       "repne" "repnz" "repz" "times" "wait" "xacquire" "xrelease" "bnd")
-    "NASM prefixes (nasmlib.c) for `nasm-mode'."))
+    "FASM prefixes (fasmlib.c) for `fasm-mode'."))
 
 (eval-and-compile
-  (defconst nasm-pp-directives
+  (defconst fasm-pp-directives
     '("%elif" "%elifn" "%elifctx" "%elifnctx" "%elifdef" "%elifndef"
       "%elifempty" "%elifnempty" "%elifenv" "%elifnenv" "%elifid"
       "%elifnid" "%elifidn" "%elifnidn" "%elifidni" "%elifnidni"
@@ -527,66 +527,66 @@ This can be :tab, :space, or nil (do nothing)."
       "%strlen" "%substr" "%undef" "%unimacro" "%unmacro" "%use"
       "%warning" "%xdefine" "istruc" "at" "iend" "align" "alignb"
       "struc" "endstruc" "__LINE__" "__FILE__" "%comment" "%endcomment"
-      "__NASM_MAJOR__" " __NASM_MINOR__" "__NASM_SUBMINOR__"
-      "___NASM_PATCHLEVEL__" "__NASM_VERSION_ID__" "__NASM_VER__"
+      "__FASM_MAJOR__" " __FASM_MINOR__" "__FASM_SUBMINOR__"
+      "___FASM_PATCHLEVEL__" "__FASM_VERSION_ID__" "__FASM_VER__"
       "__BITS__" "__OUTPUT_FORMAT__" "__DATE__" "__TIME__" "__DATE_NUM__"
       "__TIME_NUM__" "__UTC_DATE__" "__UTC_TIME__" "__UTC_DATE_NUM__"
       "__UTC_TIME_NUM__" "__POSIX_TIME__" " __PASS__" "SECTALIGN")
-    "NASM preprocessor directives (pptok.c) for `nasm-mode'."))
+    "FASM preprocessor directives (pptok.c) for `fasm-mode'."))
 
-(defconst nasm-nonlocal-label-rexexp
+(defconst fasm-nonlocal-label-rexexp
   "\\(\\_<[a-zA-Z_?][a-zA-Z0-9_$#@~?]*\\_>\\)\\s-*:"
-  "Regexp for `nasm-mode' for matching nonlocal labels.")
+  "Regexp for `fasm-mode' for matching nonlocal labels.")
 
-(defconst nasm-local-label-regexp
+(defconst fasm-local-label-regexp
   "\\(\\_<\\.[a-zA-Z_?][a-zA-Z0-9_$#@~?]*\\_>\\)\\(?:\\s-*:\\)?"
-  "Regexp for `nasm-mode' for matching local labels.")
+  "Regexp for `fasm-mode' for matching local labels.")
 
-(defconst nasm-label-regexp
-  (concat nasm-nonlocal-label-rexexp "\\|" nasm-local-label-regexp)
-  "Regexp for `nasm-mode' for matching labels.")
+(defconst fasm-label-regexp
+  (concat fasm-nonlocal-label-rexexp "\\|" fasm-local-label-regexp)
+  "Regexp for `fasm-mode' for matching labels.")
 
-(defconst nasm-constant-regexp
+(defconst fasm-constant-regexp
   "\\_<$?[-+]?[0-9][-+_0-9A-Fa-fHhXxDdTtQqOoBbYyeE.]*\\_>"
-  "Regexp for `nasm-mode' for matching numeric constants.")
+  "Regexp for `fasm-mode' for matching numeric constants.")
 
-(defconst nasm-section-name-regexp
+(defconst fasm-section-name-regexp
   "^\\s-*section[ \t]+\\(\\_<\\.[a-zA-Z0-9_$#@~.?]+\\_>\\)"
-  "Regexp for `nasm-mode' for matching section names.")
+  "Regexp for `fasm-mode' for matching section names.")
 
-(defmacro nasm--opt (keywords)
+(defmacro fasm--opt (keywords)
   "Prepare KEYWORDS for `looking-at'."
   `(eval-when-compile
      (regexp-opt ,keywords 'symbols)))
 
-(defconst nasm-imenu-generic-expression
-  `((nil ,(concat "^\\s-*" nasm-nonlocal-label-rexexp) 1)
-    (nil ,(concat (nasm--opt '("%define" "%macro"))
+(defconst fasm-imenu-generic-expression
+  `((nil ,(concat "^\\s-*" fasm-nonlocal-label-rexexp) 1)
+    (nil ,(concat (fasm--opt '("%define" "%macro"))
                   "\\s-+\\([a-zA-Z0-9_$#@~.?]+\\)") 2))
   "Expressions for `imenu-generic-expression'.")
 
-(defconst nasm-full-instruction-regexp
+(defconst fasm-full-instruction-regexp
   (eval-when-compile
-    (let ((pfx (nasm--opt nasm-prefix))
-          (ins (nasm--opt nasm-instructions)))
+    (let ((pfx (fasm--opt fasm-prefix))
+          (ins (fasm--opt fasm-instructions)))
       (concat "^\\(" pfx "\\s-+\\)?" ins "$")))
-  "Regexp for `nasm-mode' matching a valid full NASM instruction field.
+  "Regexp for `fasm-mode' matching a valid full FASM instruction field.
 This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
 
-(defconst nasm-font-lock-keywords
-  `((,nasm-section-name-regexp (1 'nasm-section-name))
-    (,(nasm--opt nasm-registers) . 'nasm-registers)
-    (,(nasm--opt nasm-prefix) . 'nasm-prefix)
-    (,(nasm--opt nasm-types) . 'nasm-types)
-    (,(nasm--opt nasm-instructions) . 'nasm-instructions)
-    (,(nasm--opt nasm-pp-directives) . 'nasm-preprocessor)
-    (,(concat "^\\s-*" nasm-nonlocal-label-rexexp) (1 'nasm-labels))
-    (,(concat "^\\s-*" nasm-local-label-regexp) (1 'nasm-local-labels))
-    (,nasm-constant-regexp . 'nasm-constant)
-    (,(nasm--opt nasm-directives) . 'nasm-directives))
-  "Keywords for `nasm-mode'.")
+(defconst fasm-font-lock-keywords
+  `((,fasm-section-name-regexp (1 'fasm-section-name))
+    (,(fasm--opt fasm-registers) . 'fasm-registers)
+    (,(fasm--opt fasm-prefix) . 'fasm-prefix)
+    (,(fasm--opt fasm-types) . 'fasm-types)
+    (,(fasm--opt fasm-instructions) . 'fasm-instructions)
+    (,(fasm--opt fasm-pp-directives) . 'fasm-preprocessor)
+    (,(concat "^\\s-*" fasm-nonlocal-label-rexexp) (1 'fasm-labels))
+    (,(concat "^\\s-*" fasm-local-label-regexp) (1 'fasm-local-labels))
+    (,fasm-constant-regexp . 'fasm-constant)
+    (,(fasm--opt fasm-directives) . 'fasm-directives))
+  "Keywords for `fasm-mode'.")
 
-(defconst nasm-mode-syntax-table
+(defconst fasm-mode-syntax-table
   (with-syntax-table (copy-syntax-table)
     (modify-syntax-entry ?_  "_")
     (modify-syntax-entry ?#  "_")
@@ -600,24 +600,24 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
     (modify-syntax-entry ?\' "\"")
     (modify-syntax-entry ?\` "\"")
     (syntax-table))
-  "Syntax table for `nasm-mode'.")
+  "Syntax table for `fasm-mode'.")
 
-(defvar nasm-mode-map
+(defvar fasm-mode-map
   (let ((map (make-sparse-keymap)))
     (prog1 map
-      (define-key map (kbd ":") #'nasm-colon)
-      (define-key map (kbd ";") #'nasm-comment)
-      (define-key map [remap join-line] #'nasm-join-line)))
-  "Key bindings for `nasm-mode'.")
+      (define-key map (kbd ":") #'fasm-colon)
+      (define-key map (kbd ";") #'fasm-comment)
+      (define-key map [remap join-line] #'fasm-join-line)))
+  "Key bindings for `fasm-mode'.")
 
-(defun nasm-colon ()
+(defun fasm-colon ()
   "Insert a colon and convert the current line into a label."
   (interactive)
   (call-interactively #'self-insert-command)
-  (nasm-indent-line))
+  (fasm-indent-line))
 
-(defun nasm-indent-line ()
-  "Indent current line (or insert a tab) as NASM assembly code.
+(defun fasm-indent-line ()
+  "Indent current line (or insert a tab) as FASM assembly code.
 This will be called by `indent-for-tab-command' when TAB is
 pressed. We indent the entire line as appropriate whenever POINT
 is not immediately after a mnemonic; otherwise, we insert a tab."
@@ -627,49 +627,49 @@ is not immediately after a mnemonic; otherwise, we insert a tab."
            (let ((point (point))
                  (bti (progn (back-to-indentation) (point))))
              (buffer-substring-no-properties bti point)))))
-    (if (string-match nasm-full-instruction-regexp before)
+    (if (string-match fasm-full-instruction-regexp before)
         ;; We are immediately after a mnemonic
-        (cl-case nasm-after-mnemonic-whitespace
+        (cl-case fasm-after-mnemonic-whitespace
           (:tab   (insert "\t"))
-          (:space (insert-char ?\s nasm-basic-offset)))
+          (:space (insert-char ?\s fasm-basic-offset)))
       ;; We're literally anywhere else, indent the whole line
       (let ((orig (- (point-max) (point))))
         (back-to-indentation)
-        (if (or (looking-at (nasm--opt nasm-directives))
-                (looking-at (nasm--opt nasm-pp-directives))
+        (if (or (looking-at (fasm--opt fasm-directives))
+                (looking-at (fasm--opt fasm-pp-directives))
                 (looking-at "\\[")
                 (looking-at ";;+")
-                (looking-at nasm-label-regexp))
+                (looking-at fasm-label-regexp))
             (indent-line-to 0)
-          (indent-line-to nasm-basic-offset))
+          (indent-line-to fasm-basic-offset))
         (when (> (- (point-max) orig) (point))
           (goto-char (- (point-max) orig)))))))
 
-(defun nasm--current-line ()
+(defun fasm--current-line ()
   "Return the current line as a string."
   (save-excursion
     (let ((start (progn (beginning-of-line) (point)))
           (end (progn (end-of-line) (point))))
       (buffer-substring-no-properties start end))))
 
-(defun nasm--empty-line-p ()
+(defun fasm--empty-line-p ()
   "Return non-nil if current line has non-whitespace."
-  (not (string-match-p "\\S-" (nasm--current-line))))
+  (not (string-match-p "\\S-" (fasm--current-line))))
 
-(defun nasm--line-has-comment-p ()
+(defun fasm--line-has-comment-p ()
   "Return non-nil if current line contains a comment."
   (save-excursion
     (end-of-line)
     (nth 4 (syntax-ppss))))
 
-(defun nasm--line-has-non-comment-p ()
+(defun fasm--line-has-non-comment-p ()
   "Return non-nil of the current line has code."
-  (let* ((line (nasm--current-line))
+  (let* ((line (fasm--current-line))
          (match (string-match-p "\\S-" line)))
     (when match
       (not (eql ?\; (aref line match))))))
 
-(defun nasm--inside-indentation-p ()
+(defun fasm--inside-indentation-p ()
   "Return non-nil if point is within the indentation."
   (save-excursion
     (let ((point (point))
@@ -677,16 +677,16 @@ is not immediately after a mnemonic; otherwise, we insert a tab."
           (end (progn (back-to-indentation) (point))))
       (and (<= start point) (<= point end)))))
 
-(defun nasm-comment-indent ()
+(defun fasm-comment-indent ()
   "Compute desired indentation for comment on the current line."
   comment-column)
 
-(defun nasm-insert-comment ()
+(defun fasm-insert-comment ()
   "Insert a comment if the current line doesn’t contain one."
   (let ((comment-insert-comment-function nil))
     (comment-indent)))
 
-(defun nasm-comment (&optional arg)
+(defun fasm-comment (&optional arg)
   "Begin or edit a comment with context-sensitive placement.
 
 The right-hand comment gutter is far away from the code, so this
@@ -709,52 +709,52 @@ With a prefix arg, kill the comment on the current line with
       (comment-kill nil)
     (cond
      ;; Empty line, or inside a string? Insert.
-     ((or (nasm--empty-line-p) (nth 3 (syntax-ppss)))
+     ((or (fasm--empty-line-p) (nth 3 (syntax-ppss)))
       (insert ";"))
      ;; Inside the indentation? Comment out the line.
-     ((nasm--inside-indentation-p)
+     ((fasm--inside-indentation-p)
       (insert ";"))
      ;; Currently in a right-side comment? Return.
-     ((and (nasm--line-has-comment-p)
-           (nasm--line-has-non-comment-p)
+     ((and (fasm--line-has-comment-p)
+           (fasm--line-has-non-comment-p)
            (nth 4 (syntax-ppss)))
       (goto-char (mark))
       (pop-mark))
      ;; Line has code? Mark and jump to right-side comment.
-     ((nasm--line-has-non-comment-p)
+     ((fasm--line-has-non-comment-p)
       (push-mark)
       (comment-indent))
      ;; Otherwise insert.
      ((insert ";")))))
 
-(defun nasm-join-line (join-following-p)
+(defun fasm-join-line (join-following-p)
   "Like `join-line', but use a tab when joining with a label."
   (interactive "*P")
   (join-line join-following-p)
-  (if (looking-back nasm-label-regexp (line-beginning-position))
+  (if (looking-back fasm-label-regexp (line-beginning-position))
       (let ((column (current-column)))
-        (cond ((< column nasm-basic-offset)
+        (cond ((< column fasm-basic-offset)
                (delete-char 1)
                (insert-char ?\t))
-              ((and (= column nasm-basic-offset) (eql ?: (char-before)))
+              ((and (= column fasm-basic-offset) (eql ?: (char-before)))
                (delete-char 1))))
-    (nasm-indent-line)))
+    (fasm-indent-line)))
 
 ;;;###autoload
-(define-derived-mode nasm-mode prog-mode "NASM"
-  "Major mode for editing NASM assembly programs."
-  :group 'nasm-mode
+(define-derived-mode fasm-mode prog-mode "FASM"
+  "Major mode for editing FASM assembly programs."
+  :group 'fasm-mode
   (make-local-variable 'indent-line-function)
   (make-local-variable 'comment-start)
   (make-local-variable 'comment-insert-comment-function)
   (make-local-variable 'comment-indent-function)
-  (setf font-lock-defaults '(nasm-font-lock-keywords nil :case-fold)
-        indent-line-function #'nasm-indent-line
+  (setf font-lock-defaults '(fasm-font-lock-keywords nil :case-fold)
+        indent-line-function #'fasm-indent-line
         comment-start ";"
-        comment-indent-function #'nasm-comment-indent
-        comment-insert-comment-function #'nasm-insert-comment
-        imenu-generic-expression nasm-imenu-generic-expression))
+        comment-indent-function #'fasm-comment-indent
+        comment-insert-comment-function #'fasm-insert-comment
+        imenu-generic-expression fasm-imenu-generic-expression))
 
-(provide 'nasm-mode)
+(provide 'fasm-mode)
 
-;;; nasm-mode.el ends here
+;;; fasm-mode.el ends here
