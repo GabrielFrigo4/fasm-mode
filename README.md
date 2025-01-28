@@ -22,4 +22,4 @@ If you prefer to use a package manager, you can use [quelpa-use-package](https:/
 This mode was completely inspired by the [nasm-mode][nasm-mode]
 
 [fasm]: https://flatassembler.net/
-[nasm-mode]: https://github.com/skeeto/nasm-mode
+[nasm-mode]: https://github.com/GabrielFrigo4/nasm-mode
