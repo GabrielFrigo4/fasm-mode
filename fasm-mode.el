@@ -134,13 +134,16 @@ This can be :tab, :space, or nil (do nothing)."
   (defconst fasm-directives
     '("define" "include" "irp" "irps" "macro" "match" "purge" "rept" "restore"
       "restruc" "struc" "common" "forward" "local" "reverse" "equ" "fix"
-      "struct" "union" "ends" "frame" "endf"
+      "struct" "union" "ends" "frame" "endf" "resdata" "endres"
       "format" "public" "import" "library" "export"
-      "if" "end" "while" "repeat" "err" "org" "data" "else" "heap"  "break" 
-      "align" "entry" "extrn" "label" "stack" "file" "load" "store"
-      "display" "section" "segment" "virtual"  "prologuedef" "epiloguedef"
+      "if" "else" "end" "while" "repeat" "break" "times" "assert"
+      ".code" ".data" ".end"
+      ".if" ".elseif" ".else" ".endif" ".while" ".endw" ".repeat" ".until"
+      "err" "org" "data" "heap" "stack"
+      "align" "entry" "extrn" "label" "file" "load" "store"
+      "display" "section" "segment" "virtual" "prologuedef" "epiloguedef"
       "interface" "directory" "resource"
-      "!" "!=" "<=" "<=>" ">=" "=" "==" "<" "<<" "<<<" "<>" ">" ">>" ">>>" "$" "$$"
+      "!" "!=" "<=" "<=>" ">=" "=" "==" "<" "<<" "<<<" "<>" ">" ">>" ">>>" "$" "$$" "{" "}"
       "use16" "use32" "use64")
     "FASM directives (SOURCE/TABLES.INC) for `fasm-mode'."))
 
@@ -284,8 +287,7 @@ This can be :tab, :space, or nil (do nothing)."
 
 (eval-and-compile
   (defconst fasm-prefix
-    '("lock" "invoke" "stdcall" "ccall" "cinvoke" "proc" "comcall" "cominvk"
-      "times" "assert")
+    '("lock" "invoke" "stdcall" "ccall" "cinvoke" "proc" "comcall" "cominvk")
     "FASM prefixes (SOURCE/TABLES.INC) for `fasm-mode'."))
 
 (eval-and-compile
@@ -295,7 +297,9 @@ This can be :tab, :space, or nil (do nothing)."
       "native" "static" "console" "dynamic" "efiboot" "linkinfo" "readable"
       "writable" "shareable" "writeable" "efiruntime" "executable"
       "code" "linkremove" "discardable" "interpreter" "notpageable"
-      "MZ" "PE" "PE64" "GUI" "DLL" "MS" "COFF" "ELF" "ELF64")
+      "MZ" "PE" "PE64" "GUI" "DLL" "MS" "COFF" "ELF" "ELF64"
+      "signed"
+      "ZERO?" "CARRY?" "SIGN?" "OVERFLOW?" "PARITY?")
     "FASM preprocessor directives (SOURCE/TABLES.INC) for `fasm-mode'."))
 
 (defconst fasm-nonlocal-label-rexexp
