@@ -134,7 +134,14 @@ This can be :tab, :space, or nil (do nothing)."
   (defconst fasm-directives
     '("define" "include" "irp" "irps" "macro" "match" "purge" "rept" "restore"
       "restruc" "struc" "common" "forward" "local" "reverse" "equ" "fix"
-      "struct" "union" "ends" "frame" "endf")
+      "struct" "union" "ends" "frame" "endf"
+      "format" "public" "import" "library" "export"
+      "if" "end" "while" "repeat" "err" "org" "data" "else" "heap"  "break" 
+      "align" "entry" "extrn" "label" "stack" "file" "load" "store"
+      "display" "section" "segment" "virtual"  "prologuedef" "epiloguedef"
+      "interface" "directory" "resource"
+      "!" "!=" "<=" "<=>" ">=" "=" "==" "<" "<<" "<<<" "<>" ">" ">>" ">>>" "$" "$$"
+      "use16" "use32" "use64")
     "FASM directives (SOURCE/TABLES.INC) for `fasm-mode'."))
 
 (eval-and-compile
@@ -261,7 +268,7 @@ This can be :tab, :space, or nil (do nothing)."
       "VADDPH" "VADDSH" "VCMPPH" "VCMPSH" "VCOMISH" "VCVTDQ2PH" "VCVTPD2PH" "VCVTPH2DQ" "VCVTPH2PD" "VCVTPH2PSX" "VCVTPH2QQ" "VCVTPH2UDQ" "VCVTPH2UQQ" "VCVTPH2UW" "VCVTPH2W" "VCVTQQ2PH" "VCVTSD2SH" "VCVTSH2SD" "VCVTSH2SI" "VCVTSH2SS" "VCVTSH2USI" "VCVTSI2SH" "VCVTSS2SH" "VCVTTPH2DQ" "VCVTTPH2QQ" "VCVTTPH2UDQ" "VCVTTPH2UQQ" "VCVTTPH2UW" "VCVTTPH2W" "VCVTTSH2SI" "VCVTTSH2USI" "VCVTUDQ2PH" "VCVTUQQ2PH" "VCVTUSI2SH" "VCVTUW2PH" "VCVTW2PH" "VDIVPH" "VDIVSH" "VFCMADDCPH" "VFMADDCPH" "VFCMADDCSH" "VFMADDCSH" "VFCMULCPCH" "VFMULCPCH" "VFCMULCSH" "VFMULCSH" "VFMADDSUB132PH" "VFMADDSUB213PH" "VFMADDSUB231PH" "VFMSUBADD132PH" "VFMSUBADD213PH" "VFMSUBADD231PH" "VPMADD132PH" "VPMADD213PH" "VPMADD231PH" "VFMADD132PH" "VFMADD213PH" "VFMADD231PH" "VPMADD132SH" "VPMADD213SH" "VPMADD231SH" "VPNMADD132SH" "VPNMADD213SH" "VPNMADD231SH" "VPMSUB132PH" "VPMSUB213PH" "VPMSUB231PH" "VFMSUB132PH" "VFMSUB213PH" "VFMSUB231PH" "VPMSUB132SH" "VPMSUB213SH" "VPMSUB231SH" "VPNMSUB132SH" "VPNMSUB213SH" "VPNMSUB231SH" "VFPCLASSPH" "VFPCLASSSH" "VGETEXPPH" "VGETEXPSH" "VGETMANTPH" "VGETMANTSH" "VGETMAXPH" "VGETMAXSH" "VGETMINPH" "VGETMINSH" "VMOVSH" "VMOVW" "VMULPH" "VMULSH" "VRCPPH" "VRCPSH" "VREDUCEPH" "VREDUCESH" "VENDSCALEPH" "VENDSCALESH" "VRSQRTPH" "VRSQRTSH" "VSCALEFPH" "VSCALEFSH" "VSQRTPH" "VSQRTSH" "VSUBPH" "VSUBSH" "VUCOMISH"
       "AADD" "AAND" "AXOR"
       "CLUI" "SENDUIPI" "STUI" "TESTUI" "UIRET"
-      "CMPccXADD"
+      "CMPBEXADD" "CMPBEXADD" "CMPBEXADD" "CMPBXADD" "CMPBXADD" "CMPBXADD" "CMPLEXADD" "CMPLEXADD" "CMPLEXADD" "CMPLXADD" "CMPLXADD" "CMPLXADD" "CMPNBEXADD" "CMPNBEXADD" "CMPNBEXADD" "CMPNBXADD" "CMPNBXADD" "CMPNBXADD" "CMPNLEXADD" "CMPNLEXADD" "CMPNLEXADD" "CMPNLXADD" "CMPNLXADD" "CMPNLXADD" "CMPNOXADD" "CMPNOXADD" "CMPNPXADD" "CMPNPXADD" "CMPNSXADD" "CMPNSXADD" "CMPNZXADD" "CMPNZXADD" "CMPOXADD" "CMPOXADD" "CMPPXADD" "CMPPXADD" "CMPSXADD" "CMPSXADD" "CMPZXADD" "CMPZXADD"
       "ERETS" "ERETU" "LKGS"
       "WRMSRNS" "RDMSRLIST" "WRMSRLIST"
       "HRESET"
@@ -277,20 +284,17 @@ This can be :tab, :space, or nil (do nothing)."
 
 (eval-and-compile
   (defconst fasm-prefix
-    '("lock" "invoke" "stdcall" "ccall" "cinvoke" "proc" "comcall" "cominvk")
+    '("lock" "invoke" "stdcall" "ccall" "cinvoke" "proc" "comcall" "cominvk"
+      "times" "assert")
     "FASM prefixes (SOURCE/TABLES.INC) for `fasm-mode'."))
 
 (eval-and-compile
   (defconst fasm-pp-directives
-    '("mod" "rva" "plt" "align" "as" "at" "defined" "dup" "eq" "eqtype" "from"
-      "ptr" "relativeto" "used" "binary" "export" "fixups" "import" "library"
+    '("mod" "rva" "plt" "as" "at" "defined" "dup" "eq" "eqtype" "from"
+      "ptr" "relativeto" "used" "binary" "fixups" 
       "native" "static" "console" "dynamic" "efiboot" "linkinfo" "readable"
-      "resource" "writable" "shareable" "writeable" "efiruntime" "executable"
-      "code" "linkremove" "discardable" "interpreter" "notpageable" "if" "end"
-      "err" "org" "data" "else" "heap" "load" "align" "break" "entry" "extrn"
-      "label" "stack" "store" "times" "while" "assert" "format" "public" "repeat"
-      "display" "section" "segment" "virtual" "file" "prologuedef" "epiloguedef"
-      "interface" "directory" "resource"
+      "writable" "shareable" "writeable" "efiruntime" "executable"
+      "code" "linkremove" "discardable" "interpreter" "notpageable"
       "MZ" "PE" "PE64" "GUI" "DLL" "MS" "COFF" "ELF" "ELF64")
     "FASM preprocessor directives (SOURCE/TABLES.INC) for `fasm-mode'."))
 
