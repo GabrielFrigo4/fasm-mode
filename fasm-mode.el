@@ -292,13 +292,12 @@ This can be :tab, :space, or nil (do nothing)."
 
 (eval-and-compile
   (defconst fasm-pp-directives
-    '("mod" "rva" "plt" "as" "at" "defined" "dup" "eq" "eqtype" "from"
-      "ptr" "relativeto" "used" "binary" "fixups" 
+    '("mod" "rva" "plt" "as" "at" "defined" "signed" "dup" "eq" "eqtype"
+      "from" "ptr" "relativeto" "used" "binary" "fixups" 
       "native" "static" "console" "dynamic" "efiboot" "linkinfo" "readable"
       "writable" "shareable" "writeable" "efiruntime" "executable"
       "code" "linkremove" "discardable" "interpreter" "notpageable"
       "MZ" "PE" "PE64" "GUI" "DLL" "MS" "COFF" "ELF" "ELF64"
-      "signed"
       "ZERO?" "CARRY?" "SIGN?" "OVERFLOW?" "PARITY?")
     "FASM preprocessor directives (SOURCE/TABLES.INC) for `fasm-mode'."))
 
