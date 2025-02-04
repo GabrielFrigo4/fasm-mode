@@ -136,14 +136,15 @@ This can be :tab, :space, or nil (do nothing)."
       "restruc" "struc" "common" "forward" "local" "reverse" "equ" "fix"
       "struct" "union" "ends" "frame" "endf" "resdata" "endres"
       "format" "public" "import" "library" "export"
-      "if" "else" "end" "while" "repeat" "break" "times" "assert"
+      "if" "else" "end" "while" "repeat" "break" "assert"
       ".code" ".data" ".end"
       ".if" ".elseif" ".else" ".endif" ".while" ".endw" ".repeat" ".until"
       "err" "org" "data" "heap" "stack"
-      "align" "entry" "extrn" "label" "file" "load" "store"
+      "align" "entry" "extrn" "label" "load" "store"
       "display" "section" "segment" "virtual" "prologuedef" "epiloguedef"
       "interface" "directory" "resource"
-      "!" "!=" "<=" "<=>" ">=" "=" "==" "<" "<<" "<<<" "<>" ">" ">>" ">>>" "$" "$$" "{" "}"
+      "!" "!=" "<=" "<=>" ">=" "=" "==" "<" ">" "<>" "+" "-" "*" "/" "(" ")" "[" "]" "{" "}"
+      ":" "," "|" "&" "~" "#" "`" "$" "$$"
       "use16" "use32" "use64")
     "FASM directives (SOURCE/TABLES.INC) for `fasm-mode'."))
 
@@ -280,20 +281,22 @@ This can be :tab, :space, or nil (do nothing)."
 
 (eval-and-compile
   (defconst fasm-types
-    '("byte" "word" "dword" "fword" "pword" "qword" "tbyte" "tword" "dqword"
-      "xword" "qqword" "yword" "db" "rb" "dw" "du" "rw" "dd" "rd" "df" "dp"
-      "rf" "rp" "dq" "rq" "dt" "rt")
+    '("byte" "word" "dword" "fword" "pword" "qword" "tbyte" "tword" "dqword" "xword" "qqword" "yword"
+      "file" "db" "rb" "dw" "du" "rw" "dd" "rd" "dp" "df" "rp" "rf" "dq" "rq" "dt" "rt"
+      "ptr" "dup")
     "FASM types (SOURCE/TABLES.INC) for `fasm-mode'."))
 
 (eval-and-compile
   (defconst fasm-prefix
-    '("lock" "invoke" "stdcall" "ccall" "cinvoke" "proc" "comcall" "cominvk")
+    '("invoke" "stdcall" "ccall" "cinvoke" "proc" "comcall" "cominvk"
+      "lock" "times")
     "FASM prefixes (SOURCE/TABLES.INC) for `fasm-mode'."))
 
 (eval-and-compile
   (defconst fasm-pp-directives
-    '("mod" "rva" "plt" "as" "at" "defined" "signed" "dup" "eq" "eqtype"
-      "from" "ptr" "relativeto" "used" "binary" "fixups" 
+    '("mod" "rva" "plt" "as" "at" "defined" "signed" 
+      "eqtype" "lt" "le" "gt" "ge" "eq" "neq" "false" "true"
+      "from" "relativeto" "used" "binary" "fixups" 
       "native" "static" "console" "dynamic" "efiboot" "linkinfo" "readable"
       "writable" "shareable" "writeable" "efiruntime" "executable"
       "code" "linkremove" "discardable" "interpreter" "notpageable"
