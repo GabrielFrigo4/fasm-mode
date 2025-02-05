@@ -294,13 +294,14 @@ This can be :tab, :space, or nil (do nothing)."
 
 (eval-and-compile
   (defconst fasm-pp-directives
-    '("mod" "rva" "plt" "as" "at" "defined" "signed" 
+    '("mod" "rva" "plt" "as" "at" "on" "defined" "signed" 
       "eqtype" "lt" "le" "gt" "ge" "eq" "neq" "false" "true"
-      "from" "relativeto" "used" "binary" "fixups" 
-      "native" "static" "console" "dynamic" "efiboot" "linkinfo" "readable"
-      "writable" "shareable" "writeable" "efiruntime" "executable"
-      "code" "linkremove" "discardable" "interpreter" "notpageable"
-      "MZ" "PE" "PE64" "GUI" "DLL" "MS" "COFF" "ELF" "ELF64"
+      "from" "relativeto" "used" "binary" "fixups"  
+      "static" "dynamic" "linkinfo" "readable" "writable"
+      "shareable" "writeable" "executable" "notpageable"
+      "discardable" "linkremove" "interpreter" "code" "data"
+      "console" "native" "large" "NX" "EFI" "EFIboot" "EFIruntime"
+      "MZ" "PE" "PE64" "GUI" "DLL" "WDM" "MS" "COFF" "ELF" "ELF64"
       "ZERO?" "CARRY?" "SIGN?" "OVERFLOW?" "PARITY?")
     "FASM preprocessor directives (SOURCE/TABLES.INC) for `fasm-mode'."))
 
@@ -407,7 +408,8 @@ is not immediately after a mnemonic; otherwise, we insert a tab."
         (back-to-indentation)
         (if (or (looking-at (fasm--opt fasm-directives))
                 (looking-at (fasm--opt fasm-pp-directives))
-                (looking-at "\\[")
+                (looking-at "\\{")
+                (looking-at "\\}")
                 (looking-at ";;+")
                 (looking-at fasm-label-regexp))
             (indent-line-to 0)
