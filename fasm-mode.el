@@ -11,7 +11,7 @@
 
 ;; A major mode for editing FASM x86 assembly programs. It includes
 ;; syntax highlighting, automatic indentation, and imenu integration.
-;; Unlike Emacs' generic `asm-mode`, it understands FASM-specific
+;; Unlike Emacs generic `asm-mode`, it understands FASM-specific
 ;; syntax.
 
 ;; FASM Home: https://flatassembler.net
@@ -33,20 +33,20 @@
 (require 'imenu)
 
 (defgroup fasm-mode ()
-  "Options for `fasm-mode'."
+  "Options for `fasm-mode`."
   :group 'languages)
 
 (defgroup fasm-mode-faces ()
-  "Faces used by `fasm-mode'."
+  "Faces used by `fasm-mode`."
   :group 'fasm-mode)
 
 (defcustom fasm-basic-offset (default-value 'tab-width)
-  "Indentation level for `fasm-mode'."
+  "Indentation level for `fasm-mode`."
   :type 'integer
   :group 'fasm-mode)
 
 (defcustom fasm-after-mnemonic-whitespace :tab
-  "In `fasm-mode', determines the whitespace to use after mnemonics.
+  "In `fasm-mode`, determines the whitespace to use after mnemonics.
 This can be :tab, :space, or nil (do nothing)."
   :type '(choice (const :tab) (const :space) (const nil))
   :group 'fasm-mode)
@@ -128,7 +128,7 @@ This can be :tab, :space, or nil (do nothing)."
       "tmm0" "tmm1" "tmm2" "tmm3" "tmm4" "tmm5" "tmm6" "tmm7"
       "k0" "k1" "k2" "k3" "k4" "k5" "k6" "k7"
       "bnd0" "bnd1" "bnd2" "bnd3")
-    "FASM registers (SOURCE/TABLES.INC) for `fasm-mode'."))
+    "FASM registers (SOURCE/TABLES.INC) for `fasm-mode`."))
 
 (eval-and-compile
   (defconst fasm-directives
@@ -146,7 +146,7 @@ This can be :tab, :space, or nil (do nothing)."
       "!" "!=" "<=" "<=>" ">=" "=" "==" "<" ">" "<>" "+" "-" "*" "/" "(" ")" "[" "]" "{" "}"
       ":" "," "|" "&" "~" "#" "`" "$" "$$"
       "use16" "use32" "use64")
-    "FASM directives (SOURCE/TABLES.INC) for `fasm-mode'."))
+    "FASM directives (SOURCE/TABLES.INC) for `fasm-mode`."))
 
 (eval-and-compile
   (defconst fasm-instructions
@@ -277,20 +277,20 @@ This can be :tab, :space, or nil (do nothing)."
       "WRMSRNS" "RDMSRLIST" "WRMSRLIST"
       "HRESET"
       "HINT_NOP0" "HINT_NOP1" "HINT_NOP2" "HINT_NOP3" "HINT_NOP4" "HINT_NOP5" "HINT_NOP6" "HINT_NOP7" "HINT_NOP8" "HINT_NOP9" "HINT_NOP10" "HINT_NOP11" "HINT_NOP12" "HINT_NOP13" "HINT_NOP14" "HINT_NOP15" "HINT_NOP16" "HINT_NOP17" "HINT_NOP18" "HINT_NOP19" "HINT_NOP20" "HINT_NOP21" "HINT_NOP22" "HINT_NOP23" "HINT_NOP24" "HINT_NOP25" "HINT_NOP26" "HINT_NOP27" "HINT_NOP28" "HINT_NOP29" "HINT_NOP30" "HINT_NOP31" "HINT_NOP32" "HINT_NOP33" "HINT_NOP34" "HINT_NOP35" "HINT_NOP36" "HINT_NOP37" "HINT_NOP38" "HINT_NOP39" "HINT_NOP40" "HINT_NOP41" "HINT_NOP42" "HINT_NOP43" "HINT_NOP44" "HINT_NOP45" "HINT_NOP46" "HINT_NOP47" "HINT_NOP48" "HINT_NOP49" "HINT_NOP50" "HINT_NOP51" "HINT_NOP52" "HINT_NOP53" "HINT_NOP54" "HINT_NOP55" "HINT_NOP56" "HINT_NOP57" "HINT_NOP58" "HINT_NOP59" "HINT_NOP60" "HINT_NOP61" "HINT_NOP62" "HINT_NOP63")
-    "FASM instructions (SOURCE/TABLES.INC) for `fasm-mode'."))
+    "FASM instructions (SOURCE/TABLES.INC) for `fasm-mode`."))
 
 (eval-and-compile
   (defconst fasm-types
     '("byte" "word" "dword" "fword" "pword" "qword" "tbyte" "tword" "dqword" "xword" "qqword" "yword"
       "file" "db" "rb" "dw" "du" "rw" "dd" "rd" "dp" "df" "rp" "rf" "dq" "rq" "dt" "rt"
       "ptr" "dup")
-    "FASM types (SOURCE/TABLES.INC) for `fasm-mode'."))
+    "FASM types (SOURCE/TABLES.INC) for `fasm-mode`."))
 
 (eval-and-compile
   (defconst fasm-prefix
     '("invoke" "stdcall" "ccall" "cinvoke" "proc" "comcall" "cominvk"
       "lock" "times")
-    "FASM prefixes (SOURCE/TABLES.INC) for `fasm-mode'."))
+    "FASM prefixes (SOURCE/TABLES.INC) for `fasm-mode`."))
 
 (eval-and-compile
   (defconst fasm-pp-directives
@@ -303,30 +303,30 @@ This can be :tab, :space, or nil (do nothing)."
       "console" "native" "large" "NX" "EFI" "EFIboot" "EFIruntime"
       "MZ" "PE" "PE64" "GUI" "DLL" "WDM" "MS" "COFF" "ELF" "ELF64"
       "ZERO?" "CARRY?" "SIGN?" "OVERFLOW?" "PARITY?")
-    "FASM preprocessor directives (SOURCE/TABLES.INC) for `fasm-mode'."))
+    "FASM preprocessor directives (SOURCE/TABLES.INC) for `fasm-mode`."))
 
 (defconst fasm-nonlocal-label-rexexp
   "\\(\\_<[a-zA-Z_?][a-zA-Z0-9_$#@~?]*\\_>\\)\\s-*:"
-  "Regexp for `fasm-mode' for matching nonlocal labels.")
+  "Regexp for `fasm-mode` for matching nonlocal labels.")
 
 (defconst fasm-local-label-regexp
   "\\(\\_<\\.[a-zA-Z_?][a-zA-Z0-9_$#@~?]*\\_>\\)\\(?:\\s-*:\\)?"
-  "Regexp for `fasm-mode' for matching local labels.")
+  "Regexp for `fasm-mode` for matching local labels.")
 
 (defconst fasm-label-regexp
   (concat fasm-nonlocal-label-rexexp "\\|" fasm-local-label-regexp)
-  "Regexp for `fasm-mode' for matching labels.")
+  "Regexp for `fasm-mode` for matching labels.")
 
 (defconst fasm-constant-regexp
   "\\_<$?[-+]?[0-9][-+_0-9A-Fa-fHhXxDdTtQqOoBbYyeE.]*\\_>"
-  "Regexp for `fasm-mode' for matching numeric constants.")
+  "Regexp for `fasm-mode` for matching numeric constants.")
 
 (defconst fasm-section-name-regexp
   "^\\s-*section[ \t]+\\(\\_<\\.[a-zA-Z0-9_$#@~.?]+\\_>\\)"
-  "Regexp for `fasm-mode' for matching section names.")
+  "Regexp for `fasm-mode` for matching section names.")
 
 (defmacro fasm--opt (keywords)
-  "Prepare KEYWORDS for `looking-at'."
+  "Prepare KEYWORDS for `looking-at`."
   `(eval-when-compile
      (regexp-opt ,keywords 'symbols)))
 
@@ -334,14 +334,14 @@ This can be :tab, :space, or nil (do nothing)."
   `((nil ,(concat "^\\s-*" fasm-nonlocal-label-rexexp) 1)
     (nil ,(concat (fasm--opt '("define" "macro"))
                   "\\s-+\\([a-zA-Z0-9_$#@~.?]+\\)") 2))
-  "Expressions for `imenu-generic-expression'.")
+  "Expressions for `imenu-generic-expression`.")
 
 (defconst fasm-full-instruction-regexp
   (eval-when-compile
     (let ((pfx (fasm--opt fasm-prefix))
           (ins (fasm--opt fasm-instructions)))
       (concat "^\\(" pfx "\\s-+\\)?" ins "$")))
-  "Regexp for `fasm-mode' matching a valid full FASM instruction field.
+  "Regexp for `fasm-mode` matching a valid full FASM instruction field.
 This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
 
 (defconst fasm-font-lock-keywords
@@ -355,7 +355,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
     (,(concat "^\\s-*" fasm-local-label-regexp) (1 'fasm-local-labels))
     (,fasm-constant-regexp . 'fasm-constant)
     (,(fasm--opt fasm-directives) . 'fasm-directives))
-  "Keywords for `fasm-mode'.")
+  "Keywords for `fasm-mode`.")
 
 (defconst fasm-mode-syntax-table
   (with-syntax-table (copy-syntax-table)
@@ -369,9 +369,8 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
     (modify-syntax-entry ?\n ">")
     (modify-syntax-entry ?\" "\"")
     (modify-syntax-entry ?\' "\"")
-    (modify-syntax-entry ?\` "\"")
     (syntax-table))
-  "Syntax table for `fasm-mode'.")
+  "Syntax table for `fasm-mode`.")
 
 (defvar fasm-mode-map
   (let ((map (make-sparse-keymap)))
@@ -379,7 +378,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
       (define-key map (kbd ":") #'fasm-colon)
       (define-key map (kbd ";") #'fasm-comment)
       (define-key map [remap join-line] #'fasm-join-line)))
-  "Key bindings for `fasm-mode'.")
+  "Key bindings for `fasm-mode`.")
 
 (defun fasm-colon ()
   "Insert a colon and convert the current line into a label."
@@ -389,7 +388,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
 
 (defun fasm-indent-line ()
   "Indent current line (or insert a tab) as FASM assembly code.
-This will be called by `indent-for-tab-command' when TAB is
+This will be called by `indent-for-tab-command` when TAB is
 pressed. We indent the entire line as appropriate whenever POINT
 is not immediately after a mnemonic; otherwise, we insert a tab."
   (interactive)
@@ -410,6 +409,8 @@ is not immediately after a mnemonic; otherwise, we insert a tab."
                 (looking-at (fasm--opt fasm-pp-directives))
                 (looking-at "{")
                 (looking-at "}")
+                (looking-at "\\\\{")
+                (looking-at "\\\\}")
                 (looking-at ";;+")
                 (looking-at fasm-label-regexp))
             (indent-line-to 0)
@@ -475,7 +476,7 @@ code and the comment gutter.
   comment out the line.
 
 With a prefix arg, kill the comment on the current line with
-`comment-kill'."
+`comment-kill`."
   (interactive "p")
   (if (not (eql arg 1))
       (comment-kill nil)
@@ -500,7 +501,7 @@ With a prefix arg, kill the comment on the current line with
      ((insert ";")))))
 
 (defun fasm-join-line (join-following-p)
-  "Like `join-line', but use a tab when joining with a label."
+  "Like `join-line`, but use a tab when joining with a label."
   (interactive "*P")
   (join-line join-following-p)
   (if (looking-back fasm-label-regexp (line-beginning-position))
